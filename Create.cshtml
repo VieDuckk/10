@@ -1,0 +1,115 @@
+﻿@model lasttest.Models.Nhanvien
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Nhanvien</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.hotennv, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.hotennv, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.hotennv, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.tuoi, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.tuoi, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.tuoi, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.diachi, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.diachi, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.diachi, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.luongnv, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.luongnv, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.luongnv, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.maphong, "Mã phòng", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("maphong", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.maphong, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.matkhau, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.matkhau, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.matkhau, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Save" id="btnSave"name="btnSave" class="btn btn-info" />
+            </div>
+        </div>
+    </div>
+}
+<div id="msg"></div>
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+     $(function () {
+         $("#btnSave").click(function () {
+             if ($("#hotennv").val() == "" || $("#tuoi").val() == "" || $("#diachi").val() == "" || $("#luongnv").val() == "" || $("#maphong").val() == "" || $("#matkhau").val() == "") {
+                 $("#msg").html("Không được để trống");
+             } else {
+                     var nv = {};
+                     nv.hotennv = $("#hotennv").val(),
+                     nv.tuoi = $("#tuoi").val(),
+                     nv.diachi = $("#diachi").val(),
+                     nv.luongnv = $("#luongnv").val(),
+                     nv.maphong = $("#maphong").val(),
+                     nv.matkhau = $("#matkhau").val(),
+                     $.ajax({
+                         type: "POST",
+                         url: '@Url.Action("/Create")',
+                         data: '{nv: ' + JSON.stringify(nv) + '}',
+                         dataType: "json",
+                         contentType: "application/json; charset=UTF-8",
+                         success: function (response) {
+                             if (response.a == true) {
+                                 $("#msg").html("Thêm thành công!");
+                             } else {
+                                 $("#msg").html(response.error);;
+                             }
+                         },
+                         error: function () {
+                             alert("Có lỗi xảy ra");
+                         }
+                     });
+                 return false;
+             }
+         });
+     });
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+}
